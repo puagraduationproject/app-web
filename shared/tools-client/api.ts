@@ -1,5 +1,4 @@
 export type Account = {
-  id: string;
   email: string;
   name: string | null;
   phone: string | null;
@@ -18,6 +17,16 @@ export class ApiError extends Error {
     super(code);
   }
 }
+
+export type Business = {
+  name: string;
+  handle: string;
+  business_type: 'coffee_shop' | 'small_market' | 'other';
+  team_size: 'alone' | 'team';
+  role: 'owner' | 'manager' | 'staff' | 'viewer';
+  username: string;
+  display_name: string;
+};
 
 export type Session = {
   id: string;
@@ -63,6 +72,7 @@ const messages: Record<string, string> = {
   ticket_invalid: 'This step has expired. Please start again.',
   outside_failed: "We couldn't send the email. Please try again.",
   limit_reached: 'Too many tries. Please wait a little.',
+  handle_taken: 'Another business has this handle. Pick another.',
   not_logged_in: 'You were logged out. Please log in again.',
   not_found: 'That device is already logged out.',
   bad_origin: 'This request was blocked. Please reload the page.',

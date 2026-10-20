@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Card } from '../shared/layout/Card';
-import { get, post, type Account } from '../shared/tools-client/api';
+import { get, post, type Account, type Business } from '../shared/tools-client/api';
 import { LandingPage } from './LandingPage';
 import { AccountPage } from './setup/AccountPage';
+import { SetupPage } from './setup/SetupPage';
 import { StartPage } from './setup/StartPage';
 import { StatusPage } from './StatusPage';
 
@@ -11,9 +12,12 @@ function go(path: string) {
   dispatchEvent(new PopStateEvent('popstate'));
 }
 
+const loadBusinesses = () => get<{ businesses: Business[] }>('/api/app/businesses').then((result) => result.businesses);
+
 export function App() {
   const [path, setPath] = useState(location.pathname);
   const [account, setAccount] = useState<Account | null>(null);
+  const [businesses, setBusinesses] = useState<Business[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -22,38 +26,64 @@ export function App() {
     return () => removeEventListener('popstate', update);
   }, []);
 
+  async function signedIn(signed: Account, firstVisit: boolean) {
+    const mine = await loadBusinesses().catch(() => []);
+    setBusinesses(mine);
+    setAccount(signed);
+    if (firstVisit) go(mine.length === 0 ? '/setup' : '/account');
+  }
+
   useEffect(() => {
     if (location.hash.startsWith('#ticket=')) {
       const ticket = location.hash.slice('#ticket='.length);
       history.replaceState(null, '', location.pathname);
       post<{ account: Account }>('/api/auth/ticket', { ticket })
-        .then((result) => setAccount(result.account))
+        .then((result) => signedIn(result.account, true))
         .catch(() => go('/login?google=expired'))
         .finally(() => setLoading(false));
       return;
     }
     get<{ account: Account }>('/api/auth/me')
-      .then((result) => setAccount(result.account))
+      .then((result) => signedIn(result.account, false))
       .catch(() => setAccount(null))
       .finally(() => setLoading(false));
   }, []);
 
   useEffect(() => {
     if (loading) return;
-    if (path === '/account' && !account) go('/login');
-    if ((path === '/' || path === '/login') && account) go('/account');
-  }, [path, account, loading]);
+    if ((path === '/account' || path === '/setup') && !account) go('/login');
+    if ((path === '/' || path === '/login') && account) go(businesses.length === 0 ? '/setup' : '/account');
+  }, [path, account, businesses, loading]);
 
   if (path === '/status') return <StatusPage />;
 
   if (loading) return <Card title="Loading…">{null}</Card>;
 
-  if (path === '/account' && account) {
-    return <AccountPage account={account} onChanged={setAccount} onLoggedOut={() => { setAccount(null); go('/'); }} />;
+  if (path === '/setup' && account) {
+    return (
+      <SetupPage
+        account={account}
+        onCreated={async () => {
+          await signedIn((await get<{ account: Account }>('/api/auth/me')).account, false);
+          go('/account');
+        }}
+      />
+    );
   }
 
-  if (path === '/login' || path === '/account') {
-    return <StartPage onSignedIn={(signedIn) => { setAccount(signedIn); go('/account'); }} />;
+  if (path === '/account' && account) {
+    return (
+      <AccountPage
+        account={account}
+        businesses={businesses}
+        onChanged={setAccount}
+        onLoggedOut={() => { setAccount(null); setBusinesses([]); go('/'); }}
+      />
+    );
+  }
+
+  if (path === '/login' || path === '/account' || path === '/setup') {
+    return <StartPage onSignedIn={(signed) => signedIn(signed, true)} />;
   }
 
   return <LandingPage />;
