@@ -108,7 +108,8 @@ app-web/
 ## Never in this repo
 
 No server information: no IP addresses, server names, hosting providers, test
-or deploy addresses, server users, folders, ports or setup, and no keys, tokens
-or real settings. The full rule is in the
+or deploy addresses, server users, folders or setup, and no keys, tokens or real
+settings. One exception: the port numbers the project's own parts use may be
+written down, never next to the server they run on. The full rule is in the
 [project README](https://github.com/puagraduationproject/graduationproject#never-in-any-repo).
 If one is pushed by mistake, it is removed from the history.
