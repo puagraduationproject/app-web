@@ -106,6 +106,15 @@ app-web/
 4. Error codes from the backend become words here, in the user's language
 5. Arabic right to left and mobile from day one
 
+## Requests to frontend
+
+Other teams ask for frontend work in the `team-handoffs` repo, in
+`fullstack-security/frontend/requests/` (`FE-<number>-<name>.md`). Each request
+has the screens, the texts, the error codes and example responses. Frontend sets
+its status (`open`, `in-progress`, `done`, `dropped`), builds it here, and the
+backend team deploys it with the backend. Frontend's own requests to backend go
+in `fullstack-security/backend/requests/` (`BE-`).
+
 ## Never in this repo
 
 No server information: no IP addresses, server names, hosting providers, test
