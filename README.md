@@ -77,8 +77,9 @@ app-web/
   packs that are on, plus recent threads and pinned items
 - The **+** menu: upload a menu photo or an invoice, quick actions (skills),
   channels
-- **Ask first / Act alone** sits where a model picker would be. Routing between
-  the model tiers is automatic
+- The **model picker** sits under the chat box, next to **Ask first / Act
+  alone**: Auto (our models, tiers picked automatically) by default, or another
+  model the owner picks. The picker is term 2
 - Answers stream: text first, cards when tools return
 - The AI answers only with the app's own cards (order, item, stock, customer,
   cash, sales, approval, plan, post); an unknown card shows its plain text
