@@ -8,7 +8,10 @@ Everything the web shows comes from the backend's tools, described in
 [app-backend/contracts](https://github.com/puagraduationproject/app-backend/tree/main/contracts). The web never has its own way into the
 data; it calls the same tools the AI uses.
 
-The stack is not chosen yet. Folders hold their pages now.
+The stack is agreed (design section 22, can change later): React, TypeScript
+and Vite for the staff app, opened in the browser; Astro for the shop pages and
+the landing page; Tailwind with shadcn/ui; TanStack Query; i18next; Playwright.
+Folders hold their pages now.
 
 ## Structure
 
