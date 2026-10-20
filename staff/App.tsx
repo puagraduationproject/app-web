@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Card } from '../shared/layout/Card';
-import { post, type Account } from '../shared/tools-client/api';
+import { get, post, type Account } from '../shared/tools-client/api';
 import { LandingPage } from './LandingPage';
 import { AccountPage } from './setup/AccountPage';
 import { StartPage } from './setup/StartPage';
@@ -14,7 +14,7 @@ function go(path: string) {
 export function App() {
   const [path, setPath] = useState(location.pathname);
   const [account, setAccount] = useState<Account | null>(null);
-  const [loading, setLoading] = useState(location.hash.startsWith('#ticket='));
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const update = () => setPath(location.pathname);
@@ -23,25 +23,33 @@ export function App() {
   }, []);
 
   useEffect(() => {
-    if (!location.hash.startsWith('#ticket=')) return;
-    const ticket = location.hash.slice('#ticket='.length);
-    history.replaceState(null, '', location.pathname);
-    post<{ account: Account }>('/api/auth/ticket', { ticket })
+    if (location.hash.startsWith('#ticket=')) {
+      const ticket = location.hash.slice('#ticket='.length);
+      history.replaceState(null, '', location.pathname);
+      post<{ account: Account }>('/api/auth/ticket', { ticket })
+        .then((result) => setAccount(result.account))
+        .catch(() => go('/login?google=expired'))
+        .finally(() => setLoading(false));
+      return;
+    }
+    get<{ account: Account }>('/api/auth/me')
       .then((result) => setAccount(result.account))
-      .catch(() => go('/login?google=expired'))
+      .catch(() => setAccount(null))
       .finally(() => setLoading(false));
   }, []);
 
   useEffect(() => {
-    if (path === '/account' && !account && !loading) go('/login');
+    if (loading) return;
+    if (path === '/account' && !account) go('/login');
+    if ((path === '/' || path === '/login') && account) go('/account');
   }, [path, account, loading]);
 
   if (path === '/status') return <StatusPage />;
 
-  if (loading) return <Card title="Signing you in…">{null}</Card>;
+  if (loading) return <Card title="Loading…">{null}</Card>;
 
   if (path === '/account' && account) {
-    return <AccountPage account={account} onChanged={setAccount} onLeave={() => { setAccount(null); go('/'); }} />;
+    return <AccountPage account={account} onChanged={setAccount} onLoggedOut={() => { setAccount(null); go('/'); }} />;
   }
 
   if (path === '/login' || path === '/account') {

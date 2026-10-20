@@ -19,14 +19,27 @@ export class ApiError extends Error {
   }
 }
 
-export async function post<T>(path: string, body: object): Promise<T> {
+export type Session = {
+  id: string;
+  browser: string;
+  ip: string;
+  created_at: string;
+  last_seen_at: string;
+  current: boolean;
+};
+
+export function get<T>(path: string): Promise<T> {
+  return send<T>(path, { method: 'GET' });
+}
+
+export function post<T>(path: string, body: object = {}): Promise<T> {
+  return send<T>(path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+}
+
+async function send<T>(path: string, init: RequestInit): Promise<T> {
   let response: Response;
   try {
-    response = await fetch(path, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(body),
-    });
+    response = await fetch(path, init);
   } catch {
     throw new ApiError('network');
   }
@@ -50,6 +63,9 @@ const messages: Record<string, string> = {
   ticket_invalid: 'This step has expired. Please start again.',
   outside_failed: "We couldn't send the email. Please try again.",
   limit_reached: 'Too many tries. Please wait a little.',
+  not_logged_in: 'You were logged out. Please log in again.',
+  not_found: 'That device is already logged out.',
+  bad_origin: 'This request was blocked. Please reload the page.',
   network: "We couldn't reach the server. Check your connection.",
 };
 

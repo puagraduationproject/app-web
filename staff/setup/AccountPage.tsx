@@ -1,14 +1,15 @@
 import { useState, type FormEvent } from 'react';
 import { Button, Card, ErrorText, Field, LinkButton } from '../../shared/layout/Card';
 import { messageFor, post, type Account } from '../../shared/tools-client/api';
+import { Devices } from './Devices';
 import { CodeStep, SetPasswordStep } from './steps';
 
 type Mode = 'view' | 'change' | 'code' | 'new_password';
 
-export function AccountPage({ account, onChanged, onLeave }: {
+export function AccountPage({ account, onChanged, onLoggedOut }: {
   account: Account;
   onChanged: (account: Account) => void;
-  onLeave: () => void;
+  onLoggedOut: () => void;
 }) {
   const [mode, setMode] = useState<Mode>('view');
   const [oldPassword, setOldPassword] = useState('');
@@ -17,6 +18,11 @@ export function AccountPage({ account, onChanged, onLeave }: {
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const [busy, setBusy] = useState(false);
+
+  async function logOut() {
+    await post('/api/auth/logout').catch(() => undefined);
+    onLoggedOut();
+  }
 
   function done(updated: Account, message: string) {
     onChanged(updated);
@@ -45,11 +51,10 @@ export function AccountPage({ account, onChanged, onLeave }: {
     setError('');
     try {
       const result = await post<{ account: Account }>('/api/auth/password/change', {
-        email: account.email,
         old_password: oldPassword,
         new_password: newPassword,
       });
-      done(result.account, 'Your password was changed.');
+      done(result.account, 'Your password was changed. Your other devices were logged out.');
     } catch (failure) {
       setError(messageFor(failure));
     } finally {
@@ -72,7 +77,7 @@ export function AccountPage({ account, onChanged, onLeave }: {
         <SetPasswordStep
           ticket={ticket}
           label="New password"
-          onDone={(updated) => done(updated, account.has_password ? 'Your password was changed.' : 'Your password was set.')}
+          onDone={(updated) => done(updated, account.has_password ? 'Your password was changed. Your other devices were logged out.' : 'Your password was set.')}
         />
       </Card>
     );
@@ -124,10 +129,10 @@ export function AccountPage({ account, onChanged, onLeave }: {
       {!account.has_password && (
         <p className="text-xs text-slate-500">We'll email you a code first, to confirm it's you.</p>
       )}
+      <Devices />
       <div className="text-center">
-        <LinkButton onClick={onLeave}>Leave</LinkButton>
+        <LinkButton onClick={logOut}>Log out</LinkButton>
       </div>
-      <p className="text-center text-xs text-slate-400">Staying logged in comes in a later step; reloading the page brings you back to the start.</p>
     </Card>
   );
 }
