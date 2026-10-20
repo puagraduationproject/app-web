@@ -104,3 +104,11 @@ app-web/
 3. A window or sidebar item shows only when its packs are on and the role allows it
 4. Error codes from the backend become words here, in the user's language
 5. Arabic right to left and mobile from day one
+
+## Never in this repo
+
+No server information: no IP addresses, server names, hosting providers, test
+or deploy addresses, server users, folders, ports or setup, and no keys, tokens
+or real settings. The full rule is in the
+[project README](https://github.com/puagraduationproject/graduationproject#never-in-any-repo).
+If one is pushed by mistake, it is removed from the history.
