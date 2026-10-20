@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Card } from '../shared/layout/Card';
 import { post, type Account } from '../shared/tools-client/api';
+import { LandingPage } from './LandingPage';
 import { AccountPage } from './setup/AccountPage';
 import { StartPage } from './setup/StartPage';
 import { StatusPage } from './StatusPage';
@@ -27,9 +28,13 @@ export function App() {
     history.replaceState(null, '', location.pathname);
     post<{ account: Account }>('/api/auth/ticket', { ticket })
       .then((result) => setAccount(result.account))
-      .catch(() => go('/?google=expired'))
+      .catch(() => go('/login?google=expired'))
       .finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    if (path === '/account' && !account && !loading) go('/login');
+  }, [path, account, loading]);
 
   if (path === '/status') return <StatusPage />;
 
@@ -39,5 +44,9 @@ export function App() {
     return <AccountPage account={account} onChanged={setAccount} onLeave={() => { setAccount(null); go('/'); }} />;
   }
 
-  return <StartPage onSignedIn={(signedIn) => { setAccount(signedIn); go('/account'); }} />;
+  if (path === '/login' || path === '/account') {
+    return <StartPage onSignedIn={(signedIn) => { setAccount(signedIn); go('/account'); }} />;
+  }
+
+  return <LandingPage />;
 }
