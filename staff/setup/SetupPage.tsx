@@ -5,19 +5,19 @@ import { ApiError, get, messageFor, post, type Account, type Business } from '..
 type Type = Business['business_type'];
 type Check = { available: boolean; reason: 'invalid' | 'reserved' | 'taken' | null };
 
-const types: [Type, string, string][] = [
-  ['coffee_shop', 'Café or coffee shop', 'Drinks, snacks, tables'],
-  ['restaurant', 'Restaurant or food', 'Meals, delivery, kitchen'],
-  ['bakery', 'Bakery or sweets', 'Fresh goods, orders ahead'],
-  ['small_market', 'Grocery or small market', 'Everyday goods, barcodes, debts'],
-  ['pharmacy', 'Pharmacy', 'Medicines, expiry dates'],
-  ['clothing', 'Clothes and fashion', 'Sizes, colors, seasons'],
-  ['electronics', 'Phones and electronics', 'Devices, accessories, repairs'],
-  ['beauty', 'Salon, barber or beauty', 'Services and bookings'],
-  ['services', 'Other services', 'Repairs, cleaning, lessons, ...'],
-  ['online', 'Online shop', 'You sell through social media or a website'],
-  ['other', 'Something else', 'Start with the basics'],
-];
+const types: [Type, string][] = [
+  ['coffee_shop', 'Café or coffee shop'],
+  ['restaurant', 'Restaurant or food'],
+  ['bakery', 'Bakery or sweets'],
+  ['small_market', 'Grocery or small market'],
+  ['pharmacy', 'Pharmacy'],
+  ['clothing', 'Clothes and fashion'],
+  ['electronics', 'Phones and electronics'],
+  ['beauty', 'Salon, barber or beauty'],
+  ['services', 'Other services'],
+  ['online', 'Online shop'],
+  ['other', 'Something else'],
+]
 
 const checkText: Record<NonNullable<Check['reason']>, string> = {
   invalid: '3 to 30 small letters, digits or dashes.',
@@ -114,8 +114,8 @@ export function SetupPage({ account, onCreated, onLogOut }: {
 
         <fieldset className="space-y-2">
           <legend className="text-sm font-medium text-slate-700">What kind of business?</legend>
-          {types.map(([value, label, hint]) => (
-            <Choice key={value} name="type" checked={type === value} onChange={() => setType(value)} label={label} hint={hint} />
+          {types.map(([value, label]) => (
+            <Choice key={value} name="type" checked={type === value} onChange={() => setType(value)} label={label} />
           ))}
         </fieldset>
 
