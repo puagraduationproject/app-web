@@ -1,14 +1,22 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { Button, ButtonLink, Card, ErrorText, Field } from '../../shared/layout/Card';
+import { Button, Card, ErrorText, Field, LinkButton } from '../../shared/layout/Card';
 import { ApiError, get, messageFor, post, type Account, type Business } from '../../shared/tools-client/api';
 
 type Type = Business['business_type'];
 type Check = { available: boolean; reason: 'invalid' | 'reserved' | 'taken' | null };
 
 const types: [Type, string, string][] = [
-  ['coffee_shop', 'Coffee shop', 'Menu, recipes, stock, tables, loyalty'],
-  ['small_market', 'Small market', 'Barcodes, expiry dates, customer debts'],
-  ['other', 'Something else', 'Start with the basics: your products, customers and chat'],
+  ['coffee_shop', 'Café or coffee shop', 'Drinks, snacks, tables'],
+  ['restaurant', 'Restaurant or food', 'Meals, delivery, kitchen'],
+  ['bakery', 'Bakery or sweets', 'Fresh goods, orders ahead'],
+  ['small_market', 'Grocery or small market', 'Everyday goods, barcodes, debts'],
+  ['pharmacy', 'Pharmacy', 'Medicines, expiry dates'],
+  ['clothing', 'Clothes and fashion', 'Sizes, colors, seasons'],
+  ['electronics', 'Phones and electronics', 'Devices, accessories, repairs'],
+  ['beauty', 'Salon, barber or beauty', 'Services and bookings'],
+  ['services', 'Other services', 'Repairs, cleaning, lessons, ...'],
+  ['online', 'Online shop', 'You sell through social media or a website'],
+  ['other', 'Something else', 'Start with the basics'],
 ];
 
 const checkText: Record<NonNullable<Check['reason']>, string> = {
@@ -28,12 +36,16 @@ export function handleFrom(name: string) {
     .replace(/^-+|-+$/g, '');
 }
 
-export function SetupPage({ account, onCreated }: { account: Account; onCreated: (business: Business) => void }) {
+export function SetupPage({ account, onCreated, onLogOut }: {
+  account: Account;
+  onCreated: (business: Business) => void;
+  onLogOut: () => void;
+}) {
   const [name, setName] = useState('');
   const [handle, setHandle] = useState('');
   const [handleEdited, setHandleEdited] = useState(false);
   const [check, setCheck] = useState<Check | null>(null);
-  const [type, setType] = useState<Type>('coffee_shop');
+  const [type, setType] = useState<Type | null>(null);
   const [team, setTeam] = useState<'alone' | 'team'>('alone');
   const [yourName, setYourName] = useState('');
   const [error, setError] = useState('');
@@ -55,6 +67,7 @@ export function SetupPage({ account, onCreated }: { account: Account; onCreated:
 
   async function submit(event: FormEvent) {
     event.preventDefault();
+    if (!type) return setError('Pick what kind of business it is.');
     setBusy(true);
     setError('');
     try {
@@ -71,7 +84,7 @@ export function SetupPage({ account, onCreated }: { account: Account; onCreated:
 
   if (created) {
     return (
-      <Card title={`${created.name} is ready`} subtitle={`You are ${created.username}@${created.handle}, the owner.`}>
+      <Card title={`${created.name} is ready`}>
         {created.team_size === 'team' && (
           <p className="text-sm text-slate-600">Inviting your team comes in a later step. You'll find it in Settings.</p>
         )}
@@ -83,7 +96,9 @@ export function SetupPage({ account, onCreated }: { account: Account; onCreated:
   return (
     <Card title="Set up your business" subtitle="A few questions. You can change all of it later.">
       <form onSubmit={submit} className="space-y-5">
-        <Field label="Business name" value={name} onChange={setName} autoFocus maxLength={80} />
+        {!account.name && <Field label="Your name" value={yourName} onChange={setYourName} autoComplete="name" maxLength={80} autoFocus />}
+
+        <Field label="Business name" value={name} onChange={setName} autoFocus={Boolean(account.name)} maxLength={80} />
 
         <div>
           <Field
@@ -92,9 +107,7 @@ export function SetupPage({ account, onCreated }: { account: Account; onCreated:
             onChange={(value) => { setHandleEdited(true); setHandle(value.toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 30)); }}
             maxLength={30}
           />
-          <p className="mt-1 text-xs text-slate-500">
-            Your username will be <span className="font-medium text-slate-900">{usernamePreview(account, yourName)}@{handle || 'handle'}</span>
-          </p>
+          <p className="mt-1 text-xs text-slate-500">Its unique name in the app. Small letters, digits and dashes.</p>
           {check && !check.available && check.reason && <p className="mt-1 text-xs text-rose-700">{checkText[check.reason]}</p>}
           {check?.available && <p className="mt-1 text-xs text-emerald-700">Available</p>}
         </div>
@@ -106,8 +119,6 @@ export function SetupPage({ account, onCreated }: { account: Account; onCreated:
           ))}
         </fieldset>
 
-        {!account.name && <Field label="Your name" value={yourName} onChange={setYourName} autoComplete="name" maxLength={80} />}
-
         <fieldset className="space-y-2">
           <legend className="text-sm font-medium text-slate-700">Who works in it?</legend>
           <Choice name="team" checked={team === 'alone'} onChange={() => setTeam('alone')} label="Just me" />
@@ -115,18 +126,13 @@ export function SetupPage({ account, onCreated }: { account: Account; onCreated:
         </fieldset>
 
         <ErrorText text={error} />
-        <Button busy={busy}>Create my business</Button>
+        <Button busy={busy}>Build my business</Button>
       </form>
-      <ButtonLink href="/account" kind="secondary">Later</ButtonLink>
+      <div className="text-center">
+        <LinkButton onClick={onLogOut}>Log out</LinkButton>
+      </div>
     </Card>
   );
-}
-
-function usernamePreview(account: Account, yourName: string) {
-  const fromName = (account.name ?? yourName).trim().split(/\s+/)[0]?.toLowerCase().replace(/[^a-z0-9]/g, '') ?? '';
-  if (fromName.length >= 2) return fromName;
-  const fromEmail = account.email.split('@')[0]!.toLowerCase().replace(/[^a-z0-9._-]/g, '').replace(/^[._-]+|[._-]+$/g, '');
-  return fromEmail.length >= 2 ? fromEmail.slice(0, 30) : 'me';
 }
 
 function Choice({ name, checked, onChange, label, hint }: {

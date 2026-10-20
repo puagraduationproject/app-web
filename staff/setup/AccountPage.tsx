@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import { Button, ButtonLink, Card, ErrorText, Field, LinkButton } from '../../shared/layout/Card';
+import { Button, Card, ErrorText, Field, LinkButton } from '../../shared/layout/Card';
 import { messageFor, post, type Account, type Business } from '../../shared/tools-client/api';
 import { Devices } from './Devices';
 import { CodeStep, SetPasswordStep } from './steps';
@@ -122,18 +122,14 @@ export function AccountPage({ account, businesses, onChanged, onLoggedOut }: {
       </dl>
       <section className="space-y-2">
         <h2 className="text-sm font-semibold text-slate-900">Businesses</h2>
-        {businesses.length === 0 ? (
-          <ButtonLink href="/setup" kind="secondary">Set up your business</ButtonLink>
-        ) : (
-          <ul className="divide-y divide-slate-100 rounded-lg bg-slate-50">
-            {businesses.map((business) => (
-              <li key={business.handle} className="flex justify-between gap-4 px-4 py-2.5 text-sm">
-                <span className="font-medium text-slate-900">{business.name}</span>
-                <span className="text-slate-500">{business.username}@{business.handle} · {business.role}</span>
-              </li>
-            ))}
-          </ul>
-        )}
+        <ul className="divide-y divide-slate-100 rounded-lg bg-slate-50">
+          {businesses.map((business) => (
+            <li key={business.handle} className="flex justify-between gap-4 px-4 py-2.5 text-sm">
+              <span className="font-medium text-slate-900">{business.name}</span>
+              <span className="text-slate-500">{business.username}@{business.handle} · {business.role}</span>
+            </li>
+          ))}
+        </ul>
       </section>
       {notice && <p className="text-sm text-emerald-700">{notice}</p>}
       <ErrorText text={error} />

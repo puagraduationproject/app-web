@@ -51,8 +51,13 @@ export function App() {
 
   useEffect(() => {
     if (loading) return;
-    if ((path === '/account' || path === '/setup') && !account) go('/login');
-    if ((path === '/' || path === '/login') && account) go(businesses.length === 0 ? '/setup' : '/account');
+    if (!account) {
+      if (path === '/account' || path === '/setup') go('/login');
+    } else if (businesses.length === 0) {
+      if (path !== '/setup' && path !== '/status') go('/setup');
+    } else if (path === '/' || path === '/login' || path === '/setup') {
+      go('/account');
+    }
   }, [path, account, businesses, loading]);
 
   if (path === '/status') return <StatusPage />;
@@ -63,6 +68,11 @@ export function App() {
     return (
       <SetupPage
         account={account}
+        onLogOut={async () => {
+          await post('/api/auth/logout').catch(() => undefined);
+          setAccount(null);
+          go('/');
+        }}
         onCreated={async () => {
           await signedIn((await get<{ account: Account }>('/api/auth/me')).account, false);
           go('/account');

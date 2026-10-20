@@ -21,7 +21,9 @@ export class ApiError extends Error {
 export type Business = {
   name: string;
   handle: string;
-  business_type: 'coffee_shop' | 'small_market' | 'other';
+  business_type:
+    | 'coffee_shop' | 'restaurant' | 'bakery' | 'small_market' | 'pharmacy' | 'clothing'
+    | 'electronics' | 'beauty' | 'services' | 'online' | 'other';
   team_size: 'alone' | 'team';
   role: 'owner' | 'manager' | 'staff' | 'viewer';
   username: string;
