@@ -1,3 +1,5 @@
+import { texts, type Language } from '../i18n';
+
 export type Account = {
   email: string;
   name: string | null;
@@ -18,13 +20,14 @@ export class ApiError extends Error {
   }
 }
 
+export type BusinessType = 'coffee_shop' | 'small_market' | 'grocery' | 'bakery' | 'restaurant' | 'other';
+
 export type Business = {
   name: string;
   handle: string;
-  business_type:
-    | 'coffee_shop' | 'restaurant' | 'bakery' | 'small_market' | 'pharmacy' | 'clothing'
-    | 'electronics' | 'beauty' | 'services' | 'online' | 'other';
-  team_size: 'alone' | 'team';
+  business_type: BusinessType;
+  sells: string | null;
+  team_size: 'alone' | 'team' | null;
   role: 'owner' | 'manager' | 'staff' | 'viewer';
   username: string;
   display_name: string;
@@ -62,26 +65,7 @@ async function send<T>(path: string, init: RequestInit): Promise<T> {
   return data as T;
 }
 
-const messages: Record<string, string> = {
-  invalid_input: 'Please check what you typed.',
-  wrong_code: "That code isn't right. Check it and try again.",
-  code_expired: 'This code has expired. Ask for a new one.',
-  too_many_tries: 'Too many wrong codes. Ask for a new one.',
-  too_soon: 'Please wait a moment before asking for a new code.',
-  wrong_password: "The email and password don't match.",
-  locked: 'Too many wrong passwords. Try again in a few minutes.',
-  no_password: 'This account has no password yet. Use a code or Google.',
-  ticket_invalid: 'This step has expired. Please start again.',
-  outside_failed: "We couldn't send the email. Please try again.",
-  limit_reached: 'Too many tries. Please wait a little.',
-  handle_taken: 'Another business has this handle. Pick another.',
-  not_logged_in: 'You were logged out. Please log in again.',
-  not_found: 'That device is already logged out.',
-  bad_origin: 'This request was blocked. Please reload the page.',
-  network: "We couldn't reach the server. Check your connection.",
-};
-
-export function messageFor(error: unknown): string {
+export function messageFor(error: unknown, language: Language = 'en'): string {
   const code = error instanceof ApiError ? error.code : 'server_error';
-  return messages[code] ?? 'Something went wrong. Please try again.';
+  return texts[language].errors[code] ?? texts[language].somethingWrong;
 }

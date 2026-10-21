@@ -1,0 +1,113 @@
+import type { Texts } from './en';
+
+// A first draft by the backend team; the Arabic texts still need an owner (ALL-001).
+export const ar: Texts = {
+  errors: {
+    invalid_input: 'راجع ما كتبته من فضلك.',
+    wrong_code: 'الرمز غير صحيح. راجعه وحاول مرة أخرى.',
+    code_expired: 'انتهت صلاحية هذا الرمز. اطلب رمزًا جديدًا.',
+    too_many_tries: 'رموز خاطئة كثيرة. اطلب رمزًا جديدًا.',
+    too_soon: 'انتظر قليلًا قبل أن تطلب رمزًا جديدًا.',
+    wrong_password: 'البريد الإلكتروني وكلمة المرور غير متطابقين.',
+    locked: 'كلمات مرور خاطئة كثيرة. حاول بعد بضع دقائق.',
+    no_password: 'هذا الحساب ليس له كلمة مرور بعد. استخدم رمزًا أو Google.',
+    ticket_invalid: 'انتهت صلاحية هذه الخطوة. ابدأ من جديد من فضلك.',
+    outside_failed: 'تعذّر إرسال البريد. حاول مرة أخرى.',
+    limit_reached: 'محاولات كثيرة. انتظر قليلًا من فضلك.',
+    handle_taken: 'يستخدم نشاط آخر هذا المعرّف. اختر غيره.',
+    business_limit: 'يمكن للحساب الواحد أن يملك حتى 5 أنشطة.',
+    not_logged_in: 'تم تسجيل خروجك. سجّل الدخول مرة أخرى من فضلك.',
+    not_found: 'تم تسجيل الخروج من هذا الجهاز بالفعل.',
+    bad_origin: 'تم إيقاف هذا الطلب. أعد تحميل الصفحة من فضلك.',
+    network: 'تعذّر الوصول إلى الخادم. تحقّق من اتصالك.',
+  },
+  somethingWrong: 'حدث خطأ ما. حاول مرة أخرى من فضلك.',
+
+  setup: {
+    title: 'جهّز نشاطك',
+    subtitle: 'بضعة أسئلة قصيرة.',
+    progress: (step, of) => `الخطوة ${step} من ${of}`,
+    next: 'التالي',
+    back: 'رجوع',
+    build: 'جهّز نشاطي',
+    logOut: 'تسجيل الخروج',
+    loading: 'جارٍ التحميل…',
+
+    language: 'أي لغة تفضّل؟',
+
+    yourName: 'بماذا يناديك المساعد الذكي؟',
+    yourNameLabel: 'اسمك',
+    yourNameHint: 'مثلًا "أحمد" أو "أستاذ أحمد".',
+    yourNameMissing: 'اكتب اسمك.',
+
+    businessName: 'ما اسم نشاطك؟',
+    businessNameLabel: 'اسم النشاط',
+    businessNameMissing: 'اكتب اسم نشاطك.',
+    shopPage: 'صفحة محلّك',
+    teamLogIn: 'شكل تسجيل دخول فريقك',
+    handle: 'المعرّف',
+    handleHelp: 'حروف لاتينية صغيرة وأرقام وشرطات. يظهر في روابطك ورموز QR، فاختره بعناية.',
+    change: 'تغيير',
+    branches: 'اسم واحد للنشاط كله. الفروع تأتي لاحقًا.',
+    handleMissing: 'اختر المعرّف.',
+    handleChecking: 'جارٍ التحقّق من المعرّف…',
+    available: 'متاح',
+    handleProblems: {
+      invalid: 'من 3 إلى 30 حرفًا لاتينيًا صغيرًا أو رقمًا أو شرطة.',
+      reserved: 'هذا الاسم محجوز. اختر غيره.',
+      taken: 'يستخدمه نشاط آخر. اختر غيره.',
+    },
+
+    businessType: 'ما نوع نشاطك؟',
+    businessTypeMissing: 'اختر نوع نشاطك.',
+    ready: 'جاهز لك',
+    notReady: 'بدأنا بالكافيهات والماركت. ستحصل على الأساسيات الآن، وسنخبرك عندما يصبح نوع نشاطك جاهزًا.',
+    sells: 'ماذا تبيع؟',
+    sellsHint: 'مثلًا: ملابس، موبايلات، صالون. يمكنك تركه فارغًا.',
+
+    location: 'أين يقع؟',
+    city: 'المدينة',
+    pickCity: 'اختر المدينة',
+    area: 'المنطقة',
+    areaHint: 'مثلًا: سموحة',
+    cityMissing: 'اختر المدينة.',
+    areaMissing: 'اكتب المنطقة.',
+
+    readyTitle: (name) => `${name} جاهز`,
+    readyLine: 'لنبدأ بإضافة ما تبيعه.',
+    setUpTitle: (name) => `تم تجهيز ${name}`,
+    firstSteps: 'ابدأ بواحدة من هذه:',
+    menuPhoto: 'أرسل صورة المنيو',
+    addProduct: 'أضف منتجًا',
+    connectTelegram: 'اربط تيليجرام',
+    goHome: 'اذهب إلى الرئيسية',
+    defaults: 'العربية · الجنيه المصري · توقيت القاهرة',
+  },
+
+  kinds: {
+    coffee_shop: 'كافيه أو مقهى',
+    small_market: 'ماركت صغير',
+    grocery: 'بقالة',
+    bakery: 'مخبز أو حلويات',
+    restaurant: 'مطعم',
+    other: 'شيء آخر',
+  },
+
+  cities: {
+    cairo: 'القاهرة', giza: 'الجيزة', alexandria: 'الإسكندرية', aswan: 'أسوان', asyut: 'أسيوط', beheira: 'البحيرة',
+    beni_suef: 'بني سويف', dakahlia: 'الدقهلية', damietta: 'دمياط', faiyum: 'الفيوم', gharbia: 'الغربية',
+    ismailia: 'الإسماعيلية', kafr_el_sheikh: 'كفر الشيخ', luxor: 'الأقصر', matrouh: 'مطروح', minya: 'المنيا',
+    monufia: 'المنوفية', new_valley: 'الوادي الجديد', north_sinai: 'شمال سيناء', port_said: 'بورسعيد',
+    qalyubia: 'القليوبية', qena: 'قنا', red_sea: 'البحر الأحمر', sharqia: 'الشرقية', sohag: 'سوهاج',
+    south_sinai: 'جنوب سيناء', suez: 'السويس',
+  },
+
+  home: {
+    welcome: (name, business) => `أهلًا يا ${name}. ${business} جاهز.`,
+    firstLine: 'لنبدأ بإضافة ما تبيعه.',
+    comingSoon: 'هذا الجزء قادم قريبًا.',
+    aiNotConnected: 'المساعد الذكي غير متصل بعد.',
+    myAccount: 'حسابي',
+    logOut: 'تسجيل الخروج',
+  },
+};

@@ -68,12 +68,13 @@ export function App() {
     return (
       <SetupPage
         account={account}
+        onAccount={setAccount}
         onLogOut={async () => {
           await post('/api/auth/logout').catch(() => undefined);
           setAccount(null);
           go('/');
         }}
-        onCreated={async () => {
+        onDone={async () => {
           await signedIn((await get<{ account: Account }>('/api/auth/me')).account, false);
           go('/account');
         }}

@@ -22,6 +22,10 @@ export function Field(props: {
   inputMode?: 'numeric' | 'email' | 'text';
   autoFocus?: boolean;
   maxLength?: number;
+  placeholder?: string;
+  dir?: 'ltr' | 'rtl';
+  onBlur?: () => void;
+  required?: boolean;
 }) {
   return (
     <label className="block">
@@ -31,11 +35,14 @@ export function Field(props: {
         type={props.type ?? 'text'}
         value={props.value}
         onChange={(event) => props.onChange(event.target.value)}
+        onBlur={props.onBlur}
         autoComplete={props.autoComplete}
         inputMode={props.inputMode}
         autoFocus={props.autoFocus}
         maxLength={props.maxLength}
-        required
+        placeholder={props.placeholder}
+        dir={props.dir}
+        required={props.required ?? true}
       />
     </label>
   );
