@@ -100,9 +100,9 @@ export const en = {
   } as Record<string, string>,
 
   home: {
-    welcome: (name: string, business: string) => `Welcome, ${name}. ${business} is ready.`,
+    welcome: (name: string) => `Welcome, ${name}.`,
     firstLine: "Let's add what you sell first.",
-    comingSoon: 'This part is coming soon.',
+    comingSoon: 'Home is coming soon: the chat, and what needs you today.',
     aiNotConnected: 'The AI is not connected yet.',
     myAccount: 'My account',
     logOut: 'Log out',

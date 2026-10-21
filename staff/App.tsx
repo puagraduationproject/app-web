@@ -6,6 +6,9 @@ import { AccountPage } from './setup/AccountPage';
 import { SetupPage } from './setup/SetupPage';
 import { StartPage } from './setup/StartPage';
 import { StatusPage } from './StatusPage';
+import { HomePage } from './home/HomePage';
+
+const HOME = '/home';
 
 function go(path: string) {
   history.pushState(null, '', path);
@@ -30,7 +33,7 @@ export function App() {
     const mine = await loadBusinesses().catch(() => []);
     setBusinesses(mine);
     setAccount(signed);
-    if (firstVisit) go(mine.length === 0 ? '/setup' : '/account');
+    if (firstVisit) go(mine.length === 0 ? '/setup' : HOME);
   }
 
   useEffect(() => {
@@ -52,11 +55,11 @@ export function App() {
   useEffect(() => {
     if (loading) return;
     if (!account) {
-      if (path === '/account' || path === '/setup') go('/login');
+      if (path === '/account' || path === '/setup' || path === HOME) go('/login');
     } else if (businesses.length === 0) {
       if (path !== '/setup' && path !== '/status') go('/setup');
     } else if (path === '/' || path === '/login' || path === '/setup') {
-      go('/account');
+      go(HOME);
     }
   }, [path, account, businesses, loading]);
 
@@ -74,12 +77,16 @@ export function App() {
           setAccount(null);
           go('/');
         }}
-        onDone={async () => {
+        onDone={async (target) => {
           await signedIn((await get<{ account: Account }>('/api/auth/me')).account, false);
-          go('/account');
+          go(target);
         }}
       />
     );
+  }
+
+  if (path === HOME && account && businesses[0]) {
+    return <HomePage account={account} business={businesses[0]} onLoggedOut={() => { setAccount(null); setBusinesses([]); go('/'); }} />;
   }
 
   if (path === '/account' && account) {
@@ -93,7 +100,7 @@ export function App() {
     );
   }
 
-  if (path === '/login' || path === '/account' || path === '/setup') {
+  if (path === '/login' || path === '/account' || path === '/setup' || path === HOME) {
     return <StartPage onSignedIn={(signed) => signedIn(signed, true)} />;
   }
 

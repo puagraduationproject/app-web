@@ -142,7 +142,8 @@ export function AccountPage({ account, businesses, onChanged, onLoggedOut }: {
         <p className="text-xs text-slate-500">We'll email you a code first, to confirm it's you.</p>
       )}
       <Devices />
-      <div className="text-center">
+      <div className="flex justify-between">
+        <a href="/home" className="text-sm text-slate-600 underline">Home</a>
         <LinkButton onClick={logOut}>Log out</LinkButton>
       </div>
     </Card>

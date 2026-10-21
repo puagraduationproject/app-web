@@ -103,9 +103,9 @@ export const ar: Texts = {
   },
 
   home: {
-    welcome: (name, business) => `أهلًا يا ${name}. ${business} جاهز.`,
+    welcome: (name) => `أهلًا يا ${name}.`,
     firstLine: 'لنبدأ بإضافة ما تبيعه.',
-    comingSoon: 'هذا الجزء قادم قريبًا.',
+    comingSoon: 'الرئيسية قادمة قريبًا: المحادثة، وما يحتاجك اليوم.',
     aiNotConnected: 'المساعد الذكي غير متصل بعد.',
     myAccount: 'حسابي',
     logOut: 'تسجيل الخروج',
