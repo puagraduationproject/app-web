@@ -17,7 +17,7 @@ export function StatusPage() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-slate-50 p-6">
       <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-200">
-        <h1 className="text-3xl font-bold text-slate-900">PUA Graduation Project</h1>
+        <h1 className="text-3xl font-bold text-slate-900">EdaraPilot</h1>
         <p className="mt-2 text-slate-500">One AI for every small business.</p>
         <ul className="mt-6 space-y-2">
           <Status label="Web" value="up" />

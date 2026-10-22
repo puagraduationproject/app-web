@@ -4,7 +4,7 @@ export function Card({ title, subtitle, children }: { title: string; subtitle?: 
   return (
     <main className="min-h-screen flex items-center justify-center bg-slate-50 p-6">
       <div className="w-full max-w-sm rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-200">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">PUA Graduation Project</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">EdaraPilot</p>
         <h1 className="mt-2 text-2xl font-bold text-slate-900">{title}</h1>
         {subtitle && <p className="mt-1 text-sm text-slate-500">{subtitle}</p>}
         <div className="mt-6 space-y-4">{children}</div>
